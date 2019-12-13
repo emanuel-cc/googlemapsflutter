@@ -57,7 +57,6 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
   List<Marker> markers = <Marker>[];
   Error error;
   List<Result> places;
-  List resultados;
   bool searching = true;
   String keyword;
 
@@ -80,7 +79,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
             mapType: MapType.normal,
             initialCameraPosition: _myLocation,
             onMapCreated: (GoogleMapController controller) {
-              _setStyle(controller);
+              //_setStyle(controller);
               _controller.complete(controller);
             },
             markers: Set<Marker>.of(markers),
@@ -105,7 +104,9 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                     );
                   
                 }else{
-                  return CircularProgressIndicator();
+                  return Center(
+                    child: Text('No hay datos'),
+                  );
                 }
                 
               },
@@ -114,7 +115,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
           Align(
             alignment: Alignment.topRight,
             child: FloatingActionButton.extended(
-              onPressed: () {
+              onPressed: (){
                 searchNearby(latitude, longitude);
                 result(latitude, longitude);
               },
@@ -161,7 +162,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
       markers.clear();
     });
     String url =
-        '$baseUrl?key=$_API_KEY&location=$latitude,$longitude&radius=10000&keyword=${widget.keyword}';//&keyword=${widget.keyword}
+        '$baseUrl?key=$_API_KEY&location=$latitude,$longitude&radius=30000&keyword=${widget.keyword}';//&keyword=${widget.keyword}
     print(url);
     final response = await http.get(url);
 
@@ -181,7 +182,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
   Future<List<Result>> result(double latitude, double longitude)async{
     Map<String,dynamic> data;
     String url =
-        '$baseUrl?key=$_API_KEY&location=$latitude,$longitude&radius=10000&keyword=${widget.keyword}';
+        '$baseUrl?key=$_API_KEY&location=$latitude,$longitude&radius=30000&keyword=${widget.keyword}';
     final response = await http.get(url);
     
     if (response.statusCode == 200) {
@@ -192,7 +193,7 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
     }
 
     _handleResponse(data);
-    print(data);
+   // print(data);
 
     return places;
   }
@@ -216,13 +217,10 @@ class _PlacesSearchMapSample extends State<PlacesSearchMapSample> {
                 infoWindow: InfoWindow(
                     title: places[i].name, snippet: places[i].vicinity),
                 onTap: () {},
+                
               ),
             );
-
-            
           }
-
-          
         });
       } else {
         print(data);
